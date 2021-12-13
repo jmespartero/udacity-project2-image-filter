@@ -33,7 +33,12 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     if (!imageUrl) {
       return res.status(400).send('Image url is required');
     }
-    const filteredPath = await filterImageFromURL(imageUrl);
+    let filteredPath: string;
+    try {
+      filteredPath = await filterImageFromURL(imageUrl);
+    } catch(error) {
+      return res.status(500).send('Unable to filter Image');
+    }
     res.on('finish', function() {
       console.log('Before deleting: ' + filteredPath);
       deleteLocalFiles([filteredPath]);
